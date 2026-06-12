@@ -1,3 +1,5 @@
+<img src="icons/icon128.png" alt="RetroGreat logo" width="96" align="right">
+
 # RetroGreat
 
 A Manifest V3 Chrome extension that highlights, inside a Moxfield deck page, which
