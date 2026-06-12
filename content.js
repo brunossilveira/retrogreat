@@ -17,6 +17,8 @@
     },
   };
 
+  const MOXFIELD_DECK_API = "https://api2.moxfield.com/v3/decks/all";
+
   // Walks the verified v3 shape: boards.<board>.cards.<key>.card.name.
   // Tolerates the older flat shape (mainboard/sideboard/... at the top level).
   class MoxfieldApiDeckSource {
@@ -25,7 +27,7 @@
     }
 
     async cardNames() {
-      const url = `https://api2.moxfield.com/v3/decks/all/${this.publicId}`;
+      const url = `${MOXFIELD_DECK_API}/${this.publicId}`;
       const response = await fetch(url, {
         credentials: "include",
         headers: { Accept: "application/json" },
@@ -100,6 +102,10 @@
     });
   }
 
+  // DOM hooks defined in content.css — keep these names in sync with that file.
+  const CSS = { hitImage: "rgf-hit-img", hitText: "rgf-hit-text", badgeId: "rgf-badge" };
+  const HIT_TITLE = "Has a modern retro-frame printing (frame:1997, 2019+)";
+
   class DeckHighlighter {
     constructor(matchKeys, total) {
       this.matchKeys = matchKeys;
@@ -113,8 +119,8 @@
         const key = cardKey(name);
         if (!this.matchKeys.has(key)) continue;
         if (!this.painted.has(element)) {
-          element.classList.add(element.tagName === "IMG" ? "rgf-hit-img" : "rgf-hit-text");
-          element.title = "Has a modern retro-frame printing (frame:1997, 2019+)";
+          element.classList.add(element.tagName === "IMG" ? CSS.hitImage : CSS.hitText);
+          element.title = HIT_TITLE;
           this.painted.add(element);
         }
         this.found.add(key);
@@ -126,13 +132,13 @@
     // detached during apply() so painting and the badge update don't re-trigger it.
     observe() {
       let scheduled = false;
-      const watch = () => this._observer.observe(document.body, { childList: true, subtree: true });
-      this._observer = new MutationObserver(() => {
+      const watch = () => this.observer.observe(document.body, { childList: true, subtree: true });
+      this.observer = new MutationObserver(() => {
         if (scheduled) return;
         scheduled = true;
         requestAnimationFrame(() => {
           scheduled = false;
-          this._observer.disconnect();
+          this.observer.disconnect();
           this.apply();
           watch();
         });
@@ -143,15 +149,32 @@
 
   class Badge {
     static show(found, total) {
-      let node = document.getElementById("rgf-badge");
+      let node = document.getElementById(CSS.badgeId);
       if (!node) {
         node = document.createElement("div");
-        node.id = "rgf-badge";
+        node.id = CSS.badgeId;
         document.body.appendChild(node);
       }
       const label = `retro-frame card${total === 1 ? "" : "s"}`;
       node.textContent = found < total ? `★ ${found}/${total} ${label}` : `★ ${total} ${label}`;
     }
+  }
+
+  // The deck's card list: the public API first, the rendered DOM as a fallback.
+  async function resolveCardNames(publicId) {
+    if (publicId) {
+      try {
+        const names = await new MoxfieldApiDeckSource(publicId).cardNames();
+        log("API returned", names.length, "names");
+        if (names.length) return names;
+      } catch (error) {
+        log("API failed, will scrape DOM:", error.message);
+      }
+    }
+    const rendered = await waitForDeck();
+    const names = new DomDeckSource().cardNames();
+    log("DOM scrape (deck rendered:", rendered + ") returned", names.length, "names");
+    return names;
   }
 
   let running = false;
@@ -162,22 +185,7 @@
       const publicId = DeckUrl.publicId(location.href);
       log("start, publicId =", publicId);
 
-      let names = [];
-      if (publicId) {
-        try {
-          names = await new MoxfieldApiDeckSource(publicId).cardNames();
-          log("API returned", names.length, "names");
-        } catch (error) {
-          log("API failed, will scrape DOM:", error.message);
-        }
-      }
-
-      if (!names.length) {
-        const rendered = await waitForDeck();
-        names = new DomDeckSource().cardNames();
-        log("DOM scrape (deck rendered:", rendered + ") returned", names.length, "names");
-      }
-
+      const names = await resolveCardNames(publicId);
       if (!names.length) {
         log("no card names found — nothing to do");
         return;
@@ -191,7 +199,8 @@
       log("Scryfall matched", response.matches.length, "card keys");
 
       const matchKeys = new Set(response.matches);
-      const total = new Set(names.map(cardKey).filter((key) => matchKeys.has(key))).size;
+      const deckMatches = names.map(cardKey).filter((key) => matchKeys.has(key));
+      const total = new Set(deckMatches).size;
       log(total, "of this deck's cards have a retro-frame printing");
 
       await waitForDeck();
