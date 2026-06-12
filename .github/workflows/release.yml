@@ -30,10 +30,19 @@ jobs:
       - name: Package
         run: npm run package
 
+      # Upload the unpacked files (not the zip) so the downloaded artifact has
+      # manifest.json at its root and is directly uploadable to the Web Store.
+      # GitHub re-zips artifacts, so uploading retrogreat.zip would nest it.
       - uses: actions/upload-artifact@v4
         with:
-          name: retrogreat-zip
-          path: retrogreat.zip
+          name: retrogreat-unpacked
+          path: |
+            manifest.json
+            background.js
+            content.js
+            shared.js
+            content.css
+            icons/
 
       - name: Publish to Chrome Web Store
         if: startsWith(github.ref, 'refs/tags/v')

@@ -39,8 +39,15 @@ it under the repo's **Actions** tab. The Web Store still runs its own review
 (usually a few days) before the update goes live.
 
 Running the workflow manually (Actions → Release → *Run workflow*) builds and
-uploads the `retrogreat-zip` artifact without publishing — handy for grabbing a
-zip or sanity-checking the build.
+uploads the `retrogreat-unpacked` artifact without publishing — handy for
+sanity-checking the build.
+
+> **Manual upload gotcha:** the Web Store needs `manifest.json` at the **root** of
+> the uploaded zip. Build it with `npm run package` and upload that
+> `retrogreat.zip`. Don't zip the project *folder* (that nests everything under
+> `retrogreat/`), and don't upload a downloaded Actions artifact zip *of* the zip.
+> The `retrogreat-unpacked` artifact is unpacked precisely so its download is
+> already root-correct.
 
 ## What ships
 
