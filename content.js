@@ -1,11 +1,11 @@
 "use strict";
 
 (() => {
-  const { cardKey, MESSAGE_TYPE } = globalThis.RetroGreat;
+  const { cardKey, MESSAGE_TYPE } = globalThis.RetroGreat || require("./shared.js");
   const log = (...args) => console.log("[retro-frame]", ...args);
   const warn = (...args) => console.warn("[retro-frame]", ...args);
 
-  log("content script loaded on", location.href);
+  log("content script loaded on", globalThis.location?.href);
 
   const DeckUrl = {
     // https://www.moxfield.com/decks/<publicId>[/...]
@@ -204,6 +204,12 @@
     } finally {
       running = false;
     }
+  }
+
+  // Under the Node test runner: expose the pure pieces and stop before any DOM.
+  if (typeof module !== "undefined") {
+    module.exports = { DeckUrl, cleanName, MoxfieldApiDeckSource };
+    return;
   }
 
   // Run on load and on SPA navigations between decks.

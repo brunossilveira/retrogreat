@@ -77,3 +77,18 @@ final count.
    Retro-frame cards get a gold ★ and a count badge appears bottom-right.
 
 Reload the extension from `chrome://extensions` after editing any file.
+
+## Tests
+
+Pure logic (the card-key contract, the Scryfall query/finder core, the deck-JSON
+and URL parsing) is covered by zero-dependency tests using Node's built-in runner:
+
+```
+npm test        # or: node --test
+```
+
+The extension scripts load both in the browser (MV3 globals) and under Node: a
+small guarded `module.exports` / `require` seam exposes the pure pieces to the
+tests without changing browser behavior. DOM scraping and highlighting are not
+unit-tested (they'd need a headless DOM); verify those in the browser via the
+`[retro-frame]` console logs.

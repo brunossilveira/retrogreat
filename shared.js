@@ -16,3 +16,6 @@
     MESSAGE_TYPE: "FIND_RETRO_FRAMES",
   };
 })();
+
+// Exposed for the Node test runner; ignored in the browser.
+if (typeof module !== "undefined") module.exports = globalThis.RetroGreat;

@@ -76,10 +76,19 @@ most means updating those two constants.
 
 ## Testing / verifying a change
 
-No build step. Load unpacked at `chrome://extensions` (Developer mode → Load
-unpacked → this folder); after any edit hit ↻ on the card, then refresh the deck.
-`[retro-frame]` console logs trace each stage (load → names → Scryfall matches →
-highlighted N/total). Known-good deck with 30 matches:
+**Unit tests** (`npm test` / `node --test`, zero dependencies): cover the pure
+logic — `shared.js` helpers, the Scryfall core in `background.js`, and the
+deck-JSON / URL parsing in `content.js`. The extension scripts are dual-mode: a
+guarded `module.exports` / `require` seam (and `typeof importScripts` / `typeof
+chrome` / `typeof module` checks) lets Node import the pure pieces while the
+browser path is unchanged. When adding a pure function worth testing, export it
+through that seam. DOM scraping/highlighting isn't unit-tested (needs a headless
+DOM) — verify it live.
+
+**In the browser**: no build step. Load unpacked at `chrome://extensions`
+(Developer mode → Load unpacked → this folder); after any edit hit ↻ on the card,
+then refresh the deck. `[retro-frame]` console logs trace each stage (load → names
+→ Scryfall matches → highlighted N/total). Known-good deck with 30 matches:
 `https://www.moxfield.com/decks/pH9VNN1t0UuD_X8cihRoaw`.
 
 ## Conventions

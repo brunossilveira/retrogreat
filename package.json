@@ -1,0 +1,9 @@
+{
+  "name": "retrogreat",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tests for the RetroGreat Chrome extension (zero dependencies, Node's built-in runner).",
+  "scripts": {
+    "test": "node --test"
+  }
+}

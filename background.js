@@ -1,7 +1,9 @@
 "use strict";
 
-importScripts("shared.js");
-const { frontFace, cardKey, MESSAGE_TYPE } = globalThis.RetroGreat;
+// Shared helpers arrive via importScripts in the worker, or require() under Node
+// (tests). The chrome listener at the bottom is guarded the same way.
+if (typeof importScripts === "function") importScripts("shared.js");
+const { frontFace, cardKey, MESSAGE_TYPE } = globalThis.RetroGreat || require("./shared.js");
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -71,13 +73,19 @@ class RetroFrameFinder {
   }
 }
 
-const finder = new RetroFrameFinder(new ScryfallClient());
+if (typeof chrome !== "undefined" && chrome.runtime?.onMessage) {
+  const finder = new RetroFrameFinder(new ScryfallClient());
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.type !== MESSAGE_TYPE) return false;
+    finder
+      .matchingKeys(message.names || [])
+      .then((matches) => sendResponse({ matches }))
+      .catch((error) => sendResponse({ error: String(error) }));
+    return true; // keep the message channel open for the async response
+  });
+}
 
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type !== MESSAGE_TYPE) return false;
-  finder
-    .matchingKeys(message.names || [])
-    .then((matches) => sendResponse({ matches }))
-    .catch((error) => sendResponse({ error: String(error) }));
-  return true; // keep the message channel open for the async response
-});
+// Exposed for the Node test runner; ignored in the browser.
+if (typeof module !== "undefined") {
+  module.exports = { ScryfallClient, RetroFrameFinder, exactName, FRAME_FILTER };
+}
