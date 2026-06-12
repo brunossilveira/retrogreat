@@ -1,0 +1,24 @@
+{
+  "manifest_version": 3,
+  "name": "RetroGreat",
+  "version": "1.0.0",
+  "description": "Highlights cards in a Moxfield deck that have a modern retro (1997-frame) printing from 2019 or later.",
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.moxfield.com/decks/*",
+        "https://moxfield.com/decks/*"
+      ],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "host_permissions": [
+    "https://api.scryfall.com/*",
+    "https://api2.moxfield.com/*"
+  ]
+}

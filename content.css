@@ -1,0 +1,28 @@
+.rgf-hit-img {
+  outline: 2px solid rgba(212, 160, 23, 0.9) !important;
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
+.rgf-hit-text::before {
+  content: "\2605"; /* ★ */
+  color: #d4a017;
+  margin-right: 5px;
+  font-size: 0.85em;
+  vertical-align: 1px;
+}
+
+#rgf-badge {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 99999;
+  background: #1b1b1b;
+  color: #d4a017;
+  font: 13px/1.4 system-ui, sans-serif;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d4a017;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+  pointer-events: none;
+}
