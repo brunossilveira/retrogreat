@@ -4,6 +4,7 @@
   "private": true,
   "description": "Tests for the RetroGreat Chrome extension (zero dependencies, Node's built-in runner).",
   "scripts": {
-    "test": "node --test"
+    "test": "node --test",
+    "package": "rm -f retrogreat.zip && zip -qr retrogreat.zip manifest.json background.js content.js shared.js content.css icons"
   }
 }

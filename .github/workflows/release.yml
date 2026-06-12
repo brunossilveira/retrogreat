@@ -1,0 +1,46 @@
+name: Release
+
+# Push a version tag (e.g. v1.0.1) to test, package, and publish to the Chrome
+# Web Store. Running manually (workflow_dispatch) builds the zip artifact only.
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Test
+        run: node --test
+
+      - name: Sync manifest version with tag
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          node -e "const fs=require('fs');const m=JSON.parse(fs.readFileSync('manifest.json'));m.version=process.argv[1];fs.writeFileSync('manifest.json',JSON.stringify(m,null,2)+'\n')" "$VERSION"
+          echo "manifest version set to $VERSION"
+
+      - name: Package
+        run: npm run package
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: retrogreat-zip
+          path: retrogreat.zip
+
+      - name: Publish to Chrome Web Store
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: retrogreat.zip
+          extension-id: ${{ secrets.CWS_EXTENSION_ID }}
+          client-id: ${{ secrets.CWS_CLIENT_ID }}
+          client-secret: ${{ secrets.CWS_CLIENT_SECRET }}
+          refresh-token: ${{ secrets.CWS_REFRESH_TOKEN }}
