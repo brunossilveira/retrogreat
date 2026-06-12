@@ -87,9 +87,10 @@ DOM) — verify it live.
 
 **In the browser**: no build step. Load unpacked at `chrome://extensions`
 (Developer mode → Load unpacked → this folder); after any edit hit ↻ on the card,
-then refresh the deck. `[retro-frame]` console logs trace each stage (load → names
-→ Scryfall matches → highlighted N/total). Known-good deck with 30 matches:
-`https://www.moxfield.com/decks/pH9VNN1t0UuD_X8cihRoaw`.
+then refresh the deck. Set `DEBUG = true` at the top of `content.js` to enable the
+`[retro-frame]` logs tracing each stage (load → names → Scryfall matches →
+highlighted N/total); it ships `false` so the published build stays quiet.
+Known-good deck with 30 matches: `https://www.moxfield.com/decks/pH9VNN1t0UuD_X8cihRoaw`.
 
 ## Conventions
 

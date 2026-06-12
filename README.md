@@ -92,5 +92,6 @@ npm test        # or: node --test
 The extension scripts load both in the browser (MV3 globals) and under Node: a
 small guarded `module.exports` / `require` seam exposes the pure pieces to the
 tests without changing browser behavior. DOM scraping and highlighting are not
-unit-tested (they'd need a headless DOM); verify those in the browser via the
-`[retro-frame]` console logs.
+unit-tested (they'd need a headless DOM); verify those in the browser by setting
+`DEBUG = true` at the top of `content.js`, which enables `[retro-frame]` console
+logs tracing each stage. It ships `false` so the published build stays quiet.

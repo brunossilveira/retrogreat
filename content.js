@@ -2,7 +2,10 @@
 
 (() => {
   const { cardKey, MESSAGE_TYPE } = globalThis.RetroGreat || require("./shared.js");
-  const log = (...args) => console.log("[retro-frame]", ...args);
+
+  // Flip to true to trace each stage in the console while debugging.
+  const DEBUG = false;
+  const log = DEBUG ? (...args) => console.log("[retro-frame]", ...args) : () => {};
   const warn = (...args) => console.warn("[retro-frame]", ...args);
 
   log("content script loaded on", globalThis.location?.href);
