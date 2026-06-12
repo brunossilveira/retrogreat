@@ -13,14 +13,15 @@ A card qualifies when Scryfall returns a printing matching `frame:1997 year>=201
   splits them into ~15-name chunks, OR-joins them with exact-name syntax
   (`(!"A" or !"B") frame:1997 year>=2019`), waits ~100 ms between requests, and
   treats a `404` as "zero matches". Returns the set of matching cards.
-- **`content.js`** — runs on `https://www.moxfield.com/decks/*`. It reads the
-  deck's card list, asks the worker which names have a retro-frame printing, and
-  highlights those cards in the page (gold outline on card images, gold wash on
-  list rows), plus a small count badge.
+- **`content.js`** — runs on the deck page. It reads the deck's card list, asks
+  the worker which names have a retro-frame printing, and marks those cards (a
+  gold ★ before list names, a gold outline on card images), plus a small count
+  badge.
+- **`shared.js`** — the card-key helpers and message name both contexts share.
 
 Classes: `ScryfallClient` / `RetroFrameFinder` (worker), and
-`MoxfieldApiDeckSource` / `DomDeckSource` / `DeckSourceResolver` /
-`DomCardScanner` / `DeckHighlighter` (content).
+`MoxfieldApiDeckSource` / `DomDeckSource` / `DomCardScanner` / `DeckHighlighter` /
+`Badge` (content).
 
 Double-faced, split, and adventure cards are normalised to their front face
 (`"Fire // Ice"` → `"Fire"`) for both the Scryfall query and the highlight match,
@@ -73,6 +74,6 @@ final count.
 2. Enable **Developer mode** (top right).
 3. Click **Load unpacked** and select this folder.
 4. Open any public deck, e.g. `https://www.moxfield.com/decks/pH9VNN1t0UuD_X8cihRoaw`.
-   Retro-frame cards get a gold highlight and a count badge appears bottom-right.
+   Retro-frame cards get a gold ★ and a count badge appears bottom-right.
 
 Reload the extension from `chrome://extensions` after editing any file.

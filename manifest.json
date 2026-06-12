@@ -12,7 +12,7 @@
         "https://www.moxfield.com/decks/*",
         "https://moxfield.com/decks/*"
       ],
-      "js": ["content.js"],
+      "js": ["shared.js", "content.js"],
       "css": ["content.css"],
       "run_at": "document_idle"
     }

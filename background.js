@@ -1,9 +1,7 @@
 "use strict";
 
-// Canonical key for a card so split / double-faced names ("Front // Back")
-// collapse to a single value that matches Scryfall's front-face naming.
-const frontFace = (name) => name.split("//")[0].trim();
-const cardKey = (name) => frontFace(name).toLowerCase();
+importScripts("shared.js");
+const { frontFace, cardKey, MESSAGE_TYPE } = globalThis.RetroGreat;
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -76,7 +74,7 @@ class RetroFrameFinder {
 const finder = new RetroFrameFinder(new ScryfallClient());
 
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message?.type !== "FIND_RETRO_FRAMES") return false;
+  if (message?.type !== MESSAGE_TYPE) return false;
   finder
     .matchingKeys(message.names || [])
     .then((matches) => sendResponse({ matches }))

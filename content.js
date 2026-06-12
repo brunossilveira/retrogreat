@@ -1,12 +1,11 @@
 "use strict";
 
 (() => {
-  console.log("[retro-frame] content script loaded on", location.href);
+  const { cardKey, MESSAGE_TYPE } = globalThis.RetroGreat;
+  const log = (...args) => console.log("[retro-frame]", ...args);
+  const warn = (...args) => console.warn("[retro-frame]", ...args);
 
-  // Canonical key shared with the background worker: split / double-faced names
-  // ("Front // Back") collapse to their front face, lowercased.
-  const frontFace = (name) => name.split("//")[0].trim();
-  const cardKey = (name) => frontFace(name).toLowerCase();
+  log("content script loaded on", location.href);
 
   const DeckUrl = {
     // https://www.moxfield.com/decks/<publicId>[/...]
@@ -155,8 +154,6 @@
     }
   }
 
-  const log = (...args) => console.log("[retro-frame]", ...args);
-
   let running = false;
   async function run() {
     if (running) return;
@@ -186,7 +183,7 @@
         return;
       }
 
-      const response = await chrome.runtime.sendMessage({ type: "FIND_RETRO_FRAMES", names });
+      const response = await chrome.runtime.sendMessage({ type: MESSAGE_TYPE, names });
       if (!response || response.error) {
         log("background error:", response?.error);
         return;
@@ -203,7 +200,7 @@
       highlighter.observe();
       log("highlighted", highlighter.found.size, "/", total);
     } catch (error) {
-      console.warn("[retro-frame] run failed:", error);
+      warn("run failed:", error);
     } finally {
       running = false;
     }

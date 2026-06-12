@@ -24,16 +24,19 @@ The Scryfall core lives in `background.js` and must be preserved in spirit:
   which names match, highlights them. Classes: `MoxfieldApiDeckSource`,
   `DomCardScanner` / `DomDeckSource`, `DeckHighlighter`, `Badge`.
 - **`content.css`** — highlight styles, injected via the manifest (NOT from JS).
+- **`shared.js`** — the handful of things both sides must agree on: the card-key
+  helpers and the message name (`globalThis.RetroGreat`). Loaded first in the
+  content_scripts list and via `importScripts("shared.js")` in the worker.
 - **`manifest.json`** — content script matches both `www.moxfield.com` and the
   bare `moxfield.com` (Moxfield's own share URLs omit `www`).
 
 ## Card key contract (split / double-faced cards)
 
 Everything keys on the **front face, lowercased**: `cardKey(name) =
-name.split("//")[0].trim().toLowerCase()`. This function is duplicated in both
-`background.js` and `content.js` and the two copies MUST agree. Moxfield's table
-view shows only the front face (`"Bala Ged Recovery"`); Scryfall returns the full
-name (`"Bala Ged Recovery // Bala Ged Sanctuary"`); both reduce to the same key.
+name.split("//")[0].trim().toLowerCase()`. It lives once in `shared.js` so both
+contexts use the same implementation. Moxfield's table view shows only the front
+face (`"Bala Ged Recovery"`); Scryfall returns the full name
+(`"Bala Ged Recovery // Bala Ged Sanctuary"`); both reduce to the same key.
 
 ## Data sources (verified against live decks — re-verify before changing)
 
