@@ -1,24 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="128" height="128">
   <defs>
-    <linearGradient id="frame" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f0d27a"/>
-      <stop offset="0.5" stop-color="#d4a017"/>
-      <stop offset="1" stop-color="#9c6f12"/>
+    <linearGradient id="border" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#e6cf8f"/>
+      <stop offset="0.5" stop-color="#c9a64e"/>
+      <stop offset="1" stop-color="#8f7029"/>
     </linearGradient>
-    <linearGradient id="window" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2c2c2c"/>
-      <stop offset="1" stop-color="#121212"/>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2e3b0"/>
+      <stop offset="1" stop-color="#c2a256"/>
+    </linearGradient>
+    <linearGradient id="art" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#30302e"/>
+      <stop offset="1" stop-color="#101010"/>
     </linearGradient>
   </defs>
 
-  <!-- beveled retro card border -->
-  <rect x="8" y="8" width="112" height="112" rx="16" fill="url(#frame)" stroke="#6b4e12" stroke-width="2"/>
-  <rect x="19" y="19" width="90" height="90" rx="11" fill="none" stroke="#f6e3a0" stroke-width="2" opacity="0.7"/>
+  <!-- card body (retro tan border) -->
+  <rect x="26" y="9" width="76" height="110" rx="8" fill="url(#border)" stroke="#574213" stroke-width="2"/>
+  <rect x="30" y="13" width="68" height="102" rx="5" fill="none" stroke="#f6e8b8" stroke-width="1.5" opacity="0.6"/>
 
-  <!-- recessed art window -->
-  <rect x="30" y="30" width="68" height="68" rx="8" fill="url(#window)" stroke="#6b4e12" stroke-width="2"/>
+  <!-- title bar -->
+  <rect x="33" y="16" width="62" height="12" rx="2.5" fill="url(#bar)" stroke="#574213" stroke-width="1"/>
 
-  <!-- retro-frame highlight star -->
-  <path d="M64 41 L69.5 56.6 L86 57 L72.8 67.1 L77.6 82.8 L64 73.4 L50.4 82.8 L55.2 67.1 L42 57 L58.5 56.6 Z"
-        fill="#f0c64b" stroke="#9c6f12" stroke-width="1.5" stroke-linejoin="round"/>
+  <!-- art window with the retro-frame highlight star -->
+  <rect x="33" y="31" width="62" height="40" rx="2" fill="url(#art)" stroke="#574213" stroke-width="1.5"/>
+  <path d="M64 36 L67.5 46.2 L78.3 46.4 L69.7 52.9 L72.8 63.1 L64 57 L55.2 63.1 L58.3 52.9 L49.7 46.4 L60.5 46.2 Z"
+        fill="#f0c64b" stroke="#8f6f1e" stroke-width="1.2" stroke-linejoin="round"/>
+
+  <!-- type line -->
+  <rect x="33" y="74" width="62" height="9" rx="2" fill="url(#bar)" stroke="#574213" stroke-width="1"/>
+
+  <!-- text box -->
+  <rect x="33" y="86" width="62" height="27" rx="2" fill="#ece0b4" stroke="#574213" stroke-width="1"/>
+  <line x1="38" y1="93" x2="90" y2="93" stroke="#b59a5b" stroke-width="2.2"/>
+  <line x1="38" y1="100" x2="90" y2="100" stroke="#b59a5b" stroke-width="2.2"/>
+  <line x1="38" y1="107" x2="74" y2="107" stroke="#b59a5b" stroke-width="2.2"/>
 </svg>
